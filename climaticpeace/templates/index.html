@@ -1,0 +1,950 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Youth Are Green Faith Builders 2 — Climatic Peace</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Lora:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --navy:       #0d2d45;
+  --navy-mid:   #164060;
+  --teal:       #1a6b7c;
+  --teal-light: #2a8fa3;
+  --sky:        #a8d8e8;
+  --cream:      #f6f4ef;
+  --parchment:  #ede8dc;
+  --gold:       #e9a520;
+  --gold-light: #f5c248;
+  --gold-pale:  #faedc0;
+  --white:      #ffffff;
+  --text-dark:  #0f1e2b;
+  --text-mid:   #3a5568;
+  --text-light: #7a94a8;
+  --border:     #cdd8e0;
+  --error:      #c53030;
+  --shadow-sm:  0 2px 12px rgba(13,45,69,.08);
+  --shadow-md:  0 6px 28px rgba(13,45,69,.14);
+  --shadow-lg:  0 16px 56px rgba(13,45,69,.20);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: var(--text-dark); line-height: 1.7; overflow-x: hidden; }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+h1,h2,h3 { font-family: 'Lora', serif; }
+
+/* TOPBAR */
+.topbar { background: var(--navy); padding: .4rem 5%; display: flex; align-items: center; justify-content: space-between; }
+.topbar-email { color: var(--gold-light); font-size: .8rem; font-weight: 600; }
+.topbar-socials { display: flex; gap: 1rem; }
+.topbar-socials a { color: rgba(255,255,255,.55); font-size: .78rem; font-weight: 500; transition: color .2s; }
+.topbar-socials a:hover { color: var(--gold-light); }
+
+/* NAV */
+nav { position: sticky; top: 0; z-index: 1000; background: rgba(255,255,255,.97); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: .85rem 5%; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm); }
+.nav-logo { display: flex; align-items: center; gap: .75rem; }
+.nav-logo-emblem { width: 46px; height: 46px; background: var(--navy); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold-light); font-weight: 800; font-size: .9rem; font-family: 'Lora',serif; }
+.nav-logo-text { font-family: 'Lora',serif; font-size: 1.05rem; font-weight: 700; color: var(--navy); line-height: 1.2; }
+.nav-logo-text span { display: block; font-family: 'Montserrat',sans-serif; font-size: .68rem; font-weight: 500; color: var(--text-mid); }
+.nav-links { display: flex; align-items: center; gap: 1.8rem; list-style: none; }
+.nav-links a { font-size: .84rem; font-weight: 600; color: var(--text-dark); transition: color .2s; }
+.nav-links a:hover { color: var(--teal); }
+.nav-join { background: var(--navy) !important; color: var(--white) !important; padding: .48rem 1.3rem !important; border-radius: 50px !important; font-weight: 700 !important; transition: background .2s, transform .2s !important; }
+.nav-join:hover { background: var(--gold-light) !important; transform: translateY(-1px); }
+.hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: .3rem; }
+.hamburger span { display: block; width: 24px; height: 2px; background: var(--navy); border-radius: 2px; }
+.mobile-nav { display: none; position: fixed; inset: 0; background: var(--navy); z-index: 999; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; }
+.mobile-nav.open { display: flex; }
+.mobile-nav a { color: var(--white); font-size: 1.2rem; font-weight: 600; }
+.mobile-nav .close-btn { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: var(--white); font-size: 2rem; cursor: pointer; }
+
+/* SOCIAL SIDEBAR */
+.social-sidebar { position: fixed; left: 0; top: 50%; transform: translateY(-50%); z-index: 100; display: flex; flex-direction: column; background: var(--navy); border-radius: 0 8px 8px 0; overflow: hidden; }
+.social-sidebar a { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; color: rgba(255,255,255,.7); font-size: 1.1rem; transition: background .2s; border-bottom: 1px solid rgba(255,255,255,.1); }
+.social-sidebar a:hover { background: var(--teal); color: var(--white); }
+
+/* HERO */
+.hero { background: var(--cream); border-bottom: 1px solid var(--border); overflow: hidden; }
+.hero-grid { display: grid; grid-template-columns: 55% 45%; min-height: 500px; }
+.hero-left { padding: 48px 40px 40px 5%; display: flex; flex-direction: column; justify-content: center; border-right: 1px solid var(--border); }
+.hero-tag { display: inline-flex; align-items: center; gap: 7px; border: 1.5px solid var(--teal); color: var(--teal); font-size: .72rem; font-weight: 700; padding: .35rem 1rem; border-radius: 50px; margin-bottom: 1.6rem; width: fit-content; letter-spacing: .04em; }
+.hero-tag-dot { width: 6px; height: 6px; background: var(--teal); border-radius: 50%; animation: blink 1.5s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+.hero h1 { font-size: clamp(2rem, 3.6vw, 3rem); color: var(--navy); line-height: 1.1; margin-bottom: 1.1rem; }
+.hero h1 em { color: var(--gold); font-style: italic; }
+.hero-sub { font-size: .93rem; color: var(--text-mid); font-weight: 400; line-height: 1.75; margin-bottom: 2rem; max-width: 420px; }
+.hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.4rem; }
+.btn-primary-hero { background: var(--navy); color: var(--white); padding: .85rem 2rem; border-radius: 50px; font-weight: 700; font-size: .88rem; border: none; cursor: pointer; transition: background .2s, transform .2s; display: inline-flex; align-items: center; gap: .5rem; }
+.btn-primary-hero:hover { background: var(--teal); transform: translateY(-2px); }
+.btn-secondary-hero { background: transparent; color: var(--navy); padding: .85rem 2rem; border-radius: 50px; font-weight: 600; font-size: .88rem; border: 1.5px solid var(--border); cursor: pointer; transition: border-color .2s; display: inline-block; }
+.btn-secondary-hero:hover { border-color: var(--navy); }
+.hero-stats { display: flex; gap: 7rem; padding-top: 1.8rem; border-top: 1px solid var(--border); flex-wrap: wrap; text-align: center; }
+.hero-stat-num { font-family: 'Lora', serif; font-size: 1.9rem; font-weight: 700; color: var(--navy); line-height: 1; letter-spacing: .1em; }
+.hero-stat-label { font-size: .66rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: .1em; margin-top: .90rem; }
+.hero-right { min-height: 500px; background: radial-gradient(circle at center, rgba(230,170,40,.12), transparent 60%); }
+.hero-img-area { flex: 1; background: var(--cream); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: .8rem; padding: 2.5rem; border-bottom: 1px solid var(--border); }
+.hero-img-area .img-icon { font-size: 3rem; opacity: .35; }
+.hero-img-area span { font-size: .8rem; color: var(--text-light); text-align: center; }
+.hero-deadline { background: var(--gold); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.dl-label { font-size: .78rem; font-weight: 700; color: var(--white); font-family: 'Montserrat', sans-serif; }
+.dl-sub { font-size: .7rem; color: rgba(255,255,255,.75); margin-top: .1rem; }
+.hero-countdown { display: flex; align-items: center; gap: .55rem; }
+.cd-box { background: rgba(255,255,255,.25); border-radius: 8px; padding: .4rem .75rem; text-align: center; min-width: 46px; }
+.cd-num { display: block; font-family: 'Lora', serif; font-size: 1.3rem; font-weight: 700; color: var(--white); line-height: 1; }
+.cd-unit { display: block; font-size: .6rem; color: rgba(255,255,255,.75); text-transform: uppercase; letter-spacing: .06em; margin-top: .12rem; }
+.cd-sep { color: rgba(255,255,255,.6); font-size: 1.1rem; font-weight: 700; }
+.hero-features { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--border); }
+.hero-feat { padding: 18px 22px; border-right: 1px solid var(--border); }
+.hero-feat:last-child { border-right: none; }
+.hero-feat-icon { width: 42px; height: 42px; border-radius: 8px; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 1.05rem; margin-bottom: 10px; }
+.hero-feat-title { font-size: 1rem; font-weight: 700; color: var(--navy); margin: 0 0 4px; display: block; }
+.hero-feat-desc { font-size: .88rem; color: var(--text-mid); margin: 0; line-height: 1.55; }
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-left { border-right: none; border-bottom: 1px solid var(--border); padding: 2.5rem 5%; }
+  .hero-features { grid-template-columns: 1fr; }
+  .hero-feat { border-right: none; border-bottom: 1px solid var(--border); }
+  .hero-feat:last-child { border-bottom: none; }
+  .hero-deadline { flex-direction: column; align-items: flex-start; }
+}
+
+/* SHARED SECTIONS */
+section { padding: 5.5rem 5%; }
+.section-tag { display: inline-block; background: var(--sky); color: var(--navy); font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; padding: .28rem .95rem; border-radius: 50px; margin-bottom: .9rem; }
+.section-title { font-size: clamp(1.8rem, 3.8vw, 2.5rem); color: var(--navy); line-height: 1.2; margin-bottom: .7rem; }
+.section-sub { color: var(--text-mid); font-size: .93rem; max-width: 540px; }
+.section-header { margin-bottom: 3.5rem; }
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .65s, transform .65s; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* OVERVIEW */
+.overview { background: var(--white); }
+.overview-figma { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+.ov-mission { grid-column: 1; grid-row: 1 / 3; background: var(--navy); border-radius: 16px; padding: 2.5rem; display: flex; flex-direction: column; justify-content: flex-start; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+.ov-mission::before { content: ''; position: absolute; bottom: -40px; right: -40px; width: 180px; height: 180px; background: radial-gradient(circle, rgba(233,165,32,.12) 0%, transparent 70%); border-radius: 50%; }
+.ov-mission h3 { font-family: 'Lora', serif; font-size: 1rem; color: var(--gold-light); margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem; }
+.ov-mission p { font-size: .92rem; color: rgba(255,255,255,.78); line-height: 1.8; }
+.ov-mission-tag { display: inline-block; color: var(--gold-pale); font-size: .9rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: .2rem .7rem; margin-bottom: 1.5rem; }
+.ov-vision { grid-column: 2; grid-row: 1; background: var(--cream); border: 1px solid var(--border); border-top: 4px solid var(--teal); border-radius: 16px; padding: 2rem; box-shadow: var(--shadow-sm); }
+.ov-vision h3 { font-family: 'Lora', serif; font-size: 1.1rem; color: var(--navy); margin-bottom: .7rem; display: flex; align-items: center; gap: .5rem; }
+.ov-vision p { font-size: .9rem; color: var(--text-mid); line-height: 1.75; }
+.ov-overview { grid-column: 2; grid-row: 2; background: var(--cream); border: 1px solid var(--border); border-top: 4px solid var(--gold); border-radius: 16px; padding: 2rem; box-shadow: var(--shadow-sm); }
+.ov-overview h3 { font-family: 'Lora', serif; font-size: 1.1rem; color: var(--navy); margin-bottom: .7rem; display: flex; align-items: center; gap: .5rem; }
+.ov-overview p { font-size: .9rem; color: var(--text-mid); line-height: 1.75; }
+.ov-smart { grid-column: 1 / -1; background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); border-radius: 16px; padding: 2rem 2.5rem; box-shadow: var(--shadow-md); }
+.ov-smart-label { font-size: .7rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 1.2rem; text-align: center; }
+.smart-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: .8rem; }
+.smart-item { text-align: center; padding: 1.2rem 1rem; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; transition: background .2s, transform .2s; }
+.smart-item:hover { background: rgba(255,255,255,.11); transform: translateY(-3px); }
+.smart-letter { font-family: 'Lora', serif; font-size: 1.8rem; font-weight: 700; color: var(--gold-light); margin-bottom: .3rem; line-height: 1; }
+.smart-word { font-size: .65rem; font-weight: 700; color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: .08em; }
+
+/* TIMELINE */
+.timeline-section { background: var(--cream); position: relative; overflow: hidden; }
+.tl-clean-wrapper { max-width: 900px; margin: 0 auto; position: relative; padding-left: 40px; border-left: 2px solid var(--border); }
+.tl-clean-item { position: relative; margin-bottom: 2.5rem; display: flex; gap: 1.5rem; }
+.tl-num { position: absolute; left: -22px; width: 42px; height: 42px; border-radius: 50%; background: var(--navy); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-family: 'Lora', serif; border: 3px solid var(--cream); box-shadow: var(--shadow-sm); }
+.tl-content { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 1.2rem 1.4rem; width: 100%; transition: transform .2s, box-shadow .2s; }
+.tl-content:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.tl-content h3 { font-family: 'Lora', serif; font-size: 1.05rem; color: var(--navy); margin-bottom: .3rem; }
+.tl-content span { font-size: .75rem; font-weight: 700; color: var(--gold); display: block; margin-bottom: .5rem; }
+.tl-content p { font-size: .86rem; color: var(--text-mid); line-height: 1.6; }
+@media (max-width: 768px) {
+  .tl-clean-wrapper { padding-left: 30px; }
+  .tl-num { left: -18px; width: 36px; height: 36px; font-size: .8rem; }
+}
+
+/* ══ MAP — upgraded ══ */
+.map-section { background: var(--white); }
+.map-wrapper { border: 2px solid var(--border); border-radius: 16px; overflow: hidden; max-width: 100%; margin: 0 auto; box-shadow: var(--shadow-md); }
+#leaflet-map { height: 460px; width: 100%; z-index: 1; }
+
+/* Leaflet popup polish */
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  box-shadow: 0 6px 24px rgba(13,45,69,.18) !important;
+  border: none !important;
+  padding: 0 !important;
+}
+.leaflet-popup-content { margin: 0 !important; }
+.leaflet-popup-tip-container { display: none !important; }
+
+.map-legend { display: grid; grid-template-columns: repeat(5,1fr); border-top: 1px solid var(--border); }
+.map-legend-item { padding: 14px 14px; border-right: 1px solid var(--border); display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background .2s; }
+.map-legend-item:last-child { border-right: none; }
+.map-legend-item:hover { background: var(--parchment); }
+.map-legend-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--navy); border: 2.5px solid var(--gold); flex-shrink: 0; }
+.map-legend-name { font-size: .78rem; font-weight: 700; color: var(--text-dark); }
+.map-legend-region { font-size: .68rem; color: var(--text-light); margin-top: 2px; }
+
+/* BENEFITS */
+.benefits { background: var(--navy); }
+.benefits .section-tag   { background: rgba(255,255,255,.12); color: rgba(255,255,255,.85); }
+.benefits .section-title { color: var(--white); }
+.benefits .section-sub   { color: rgba(255,255,255,.6); }
+.benefits-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(230px,1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+.ben-card { background: rgba(9,1,21,0.06); border: 1px solid rgba(255,255,255,.1); border-radius: 16px; padding: 2.2rem 1.6rem; text-align: center; transition: transform .3s, border-color .3s, background .3s; }
+.ben-card:hover { transform: translateY(-6px); border-color: rgba(233,165,32,.5); background: rgba(255,255,255,.1); }
+.ben-icon { width: 72px; height: 72px; border-radius: 50%; background: rgba(233,165,32,.15); border: 2px solid rgba(233,165,32,.3); display: flex; align-items: center; justify-content: center; font-size: 1.9rem; margin: 0 auto 1.3rem; }
+.ben-card h3 { font-family: 'Lora',serif; font-size: 1rem; color: var(--white); margin-bottom: .5rem; }
+.ben-card p  { font-size: .82rem; color: rgba(255,255,255,.55); }
+
+/* ELIGIBILITY */
+.eligibility { background: var(--cream); }
+.eli-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1000px; margin: 0 auto; }
+.eli-list { list-style: none; display: flex; flex-direction: column; gap: .7rem; }
+.eli-list li { display: flex; align-items: flex-start; gap: .8rem; font-size: .88rem; color: var(--text-mid); }
+.eli-list li::before { content: '✦'; color: var(--teal); font-weight: 700; font-size: .85rem; flex-shrink: 0; margin-top: .15rem; }
+.eli-card { background: var(--navy); border-radius: 16px; padding: 2rem; }
+.eli-card h3 { font-family: 'Lora',serif; color: var(--gold-light); margin-bottom: 1rem; font-size: 1.05rem; }
+.eli-card .eli-list li { color: rgba(255,255,255,.72); }
+.eli-card .eli-list li::before { color: var(--gold-light); }
+
+/* FORM */
+.apply-section { background: var(--white); }
+.apply-section .section-header { text-align: center; }
+.apply-section .section-sub    { margin: 0 auto; }
+.django-messages { max-width: 760px; margin: 0 auto 1.5rem; }
+.django-messages .msg { padding: .85rem 1.2rem; border-radius: 10px; font-size: .88rem; font-weight: 600; }
+.django-messages .msg.error   { background: #fff5f5; border: 1px solid #fed7d7; color: var(--error); }
+.django-messages .msg.success { background: #f0fff4; border: 1px solid #c6f6d5; color: #276749; }
+.form-wrap { max-width: 760px; margin: 0 auto; background: var(--cream); border-radius: 20px; padding: 2.5rem; box-shadow: var(--shadow-md); border-top: 5px solid var(--teal); }
+.steps { display: flex; margin-bottom: 2rem; border-bottom: 1px solid var(--border); }
+.step-tab { flex: 1; text-align: center; padding: .7rem; font-size: .76rem; font-weight: 700; color: var(--text-light); border-bottom: 3px solid transparent; margin-bottom: -1px; cursor: pointer; transition: color .2s, border-color .2s; }
+.step-tab.active { color: var(--teal); border-color: var(--teal); }
+.step-tab.done   { color: var(--sky);  border-color: var(--sky); }
+.form-page { display: none; animation: slidein .35s ease; }
+.form-page.active { display: block; }
+@keyframes slidein { from{opacity:0;transform:translateX(12px)} to{opacity:1;transform:translateX(0)} }
+.f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.f-group { margin-bottom: 1.2rem; }
+.f-group label { display: block; font-size: .78rem; font-weight: 700; color: var(--navy); margin-bottom: .35rem; }
+.f-group .opt  { color: var(--text-light); font-weight: 400; }
+.f-group input, .f-group select, .f-group textarea { width: 100%; padding: .72rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'Montserrat', sans-serif; font-size: .86rem; color: var(--text-dark); background: var(--white); outline: none; transition: border-color .2s, box-shadow .2s; appearance: auto; }
+.f-group input:focus, .f-group select:focus, .f-group textarea:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(26,107,124,.12); }
+.f-group textarea { resize: vertical; min-height: 120px; }
+.field-errors { margin-top: .35rem; }
+.field-errors li { list-style: none; font-size: .75rem; color: var(--error); font-weight: 600; }
+.has-error input, .has-error select, .has-error textarea { border-color: var(--error) !important; }
+.word-count      { font-size: .72rem; text-align: right; margin-top: .25rem; color: var(--text-light); }
+.word-count.good { color: var(--teal); font-weight: 700; }
+.upload-box { border: 2px dashed var(--border); border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer; transition: border-color .2s, background .2s; background: var(--white); }
+.upload-box:hover { border-color: var(--teal); background: #eef6f8; }
+.upload-icon { font-size: 2.2rem; margin-bottom: .4rem; }
+.upload-text { font-size: .82rem; color: var(--text-mid); }
+.upload-name { font-size: .8rem; color: var(--teal); font-weight: 700; margin-top: .3rem; }
+.form-nav { display: flex; justify-content: space-between; margin-top: 1.5rem; gap: 1rem; }
+.btn-next, .btn-submit { background: var(--navy); color: var(--white); padding: .72rem 1.8rem; border-radius: 50px; font-family: 'Montserrat',sans-serif; font-size: .86rem; font-weight: 700; border: none; cursor: pointer; transition: background .2s; }
+.btn-next:hover   { background: var(--teal); }
+.btn-submit       { background: var(--gold); }
+.btn-submit:hover { background: var(--gold-light); }
+.btn-prev { background: var(--white); color: var(--text-dark); padding: .72rem 1.8rem; border-radius: 50px; font-family: 'Montserrat',sans-serif; font-size: .86rem; font-weight: 600; border: 1px solid var(--border); cursor: pointer; transition: background .2s; }
+.btn-prev:hover { background: var(--parchment); }
+
+/* PARTNERS */
+.partners { background: var(--white); }
+.partners .section-header { text-align: center; }
+.partners-grid { display: flex; flex-wrap: wrap; gap: 1.2rem; justify-content: center; max-width: 900px; margin: 0 auto; }
+.partner-card { width: 165px; height: 105px; background: var(--cream); border: 1.5px dashed var(--border); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .4rem; font-size: .72rem; color: var(--text-mid); text-align: center; padding: .8rem; transition: border-color .2s, transform .2s; }
+.partner-card:hover { border-color: var(--teal); transform: scale(1.04); }
+.partner-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; background: rgba(13,45,69,0.06); border: 1px solid var(--border); color: var(--navy); font-size: 20px; transition: 0.3s ease; }
+.partner-card:hover .partner-icon { transform: translateY(-3px); background: rgba(26,107,124,0.1); }
+
+/* FOOTER */
+footer { background: var(--navy); color: rgba(255,255,255,.5); text-align: center; padding: 2.5rem 5%; font-size: .82rem; }
+footer a { color: var(--gold-light); }
+.footer-logo { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,.08); margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-family: 'Lora',serif; font-size: 1rem; font-weight: 700; color: var(--gold-light); }
+.footer-tagline { font-size: .76rem; color: rgba(255,255,255,.35); margin-top: .3rem; letter-spacing: .08em; text-transform: uppercase; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .nav-links { display: none; } .hamburger { display: flex; } .topbar { display: none; } .social-sidebar { display: none; }
+  .overview-figma { grid-template-columns: 1fr; }
+  .ov-mission { grid-column: 1; grid-row: auto; }
+  .ov-vision  { grid-column: 1; grid-row: auto; }
+  .ov-overview{ grid-column: 1; grid-row: auto; }
+  .ov-smart   { grid-column: 1; }
+  .smart-grid { grid-template-columns: repeat(3,1fr); }
+  .eli-grid { grid-template-columns: 1fr; }
+  .f-row { grid-template-columns: 1fr; }
+  .form-wrap { padding: 1.5rem 1rem; }
+  .map-legend { grid-template-columns: repeat(3,1fr); }
+  .map-legend-item:nth-child(3) { border-right: none; }
+  .map-legend-item:nth-child(4),
+  .map-legend-item:nth-child(5) { border-top: 1px solid var(--border); }
+}
+@media (max-width: 480px) {
+  .map-legend { grid-template-columns: 1fr 1fr; }
+  .map-legend-item:nth-child(2) { border-right: none; }
+  .map-legend-item:nth-child(3),
+  .map-legend-item:nth-child(4),
+  .map-legend-item:nth-child(5) { border-top: 1px solid var(--border); }
+  .map-legend-item:nth-child(4) { border-right: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Social Sidebar -->
+<div class="social-sidebar">
+  <a href="https://facebook.com/climaticpeace"  title="Facebook"  target="_blank">f</a>
+  <a href="https://instagram.com/climaticpeace" title="Instagram" target="_blank">◎</a>
+  <a href="https://linkedin.com/company/climaticpeace" title="LinkedIn" target="_blank">in</a>
+</div>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <button class="close-btn" onclick="toggleNav()">×</button>
+  <a href="#overview"    onclick="toggleNav()">Overview</a>
+  <a href="#timeline"    onclick="toggleNav()">Timeline</a>
+  <a href="#map"         onclick="toggleNav()">Locations</a>
+  <a href="#benefits"    onclick="toggleNav()">Benefits</a>
+  <a href="#apply"       onclick="toggleNav()">Apply Now</a>
+</div>
+
+<!-- Topbar -->
+<div class="topbar">
+  <span class="topbar-email">info@climaticpeace.org</span>
+  <div class="topbar-socials">
+    <a href="#">Facebook</a>
+    <a href="#">Instagram</a>
+    <a href="#">LinkedIn</a>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-emblem">CP</div>
+    <div class="nav-logo-text">Climatic Peace<span>Youth-led Foundation</span></div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="https://climaticpeace.org">HOME</a></li>
+    <li><a href="https://climaticpeace.org/#about">About US</a></li>
+    <li><a href="#overview">OUR WORK</a></li>
+    <li><a href="#map">Our Media</a></li>
+    <li><a href="https://climaticpeace.org/#contact">CONTACT US</a></li>
+    <li><a href="#apply" class="nav-join">Join US ▾</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleNav()"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="home">
+  <div class="hero-grid">
+
+    <!-- LEFT -->
+    <div class="hero-left">
+      <div class="hero-tag">
+        <span class="hero-tag-dot"></span>
+        Applications Open &nbsp;·&nbsp; Deadline May 21
+      </div>
+      <h1>Youth Are <em>Green</em><br/>Faith Builders 2</h1>
+      <p class="hero-sub">Empowering 100 young faith leaders aged 18–30 across 5 countries to champion climate action, intercultural dialogue, and sustainable futures.</p>
+      <div class="hero-btns">
+        <a href="#apply"    class="btn-primary-hero">Apply Now</a>
+        <a href="#overview" class="btn-secondary-hero">Learn More</a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="hero-stat-num">100</div><div class="hero-stat-label">Youth Leaders</div></div>
+        <div><div class="hero-stat-num">5</div><div class="hero-stat-label">Countries</div></div>
+        <div><div class="hero-stat-num">12</div><div class="hero-stat-label">Months</div></div>
+        <div><div class="hero-stat-num">3</div><div class="hero-stat-label">SDG Goals</div></div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="hero-right">
+      <div class="hero-img-area">
+        <div class="img-icon">📸</div>
+        <span>Hero visual will be provided<br/>by the Graphic Design Team</span>
+      </div>
+      <div class="hero-deadline">
+        <div>
+          <div class="dl-label">Application deadline</div>
+          <div class="dl-sub">May 21, 2026 &nbsp;·&nbsp; Closes in:</div>
+        </div>
+        <div class="hero-countdown">
+          <div class="cd-box"><span class="cd-num" id="cd-d">--</span><span class="cd-unit">days</span></div>
+          <span class="cd-sep">:</span>
+          <div class="cd-box"><span class="cd-num" id="cd-h">--</span><span class="cd-unit">hrs</span></div>
+          <span class="cd-sep">:</span>
+          <div class="cd-box"><span class="cd-num" id="cd-m">--</span><span class="cd-unit">min</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 3-column feature strip -->
+  <div class="hero-features">
+    <div class="hero-feat">
+      <div class="hero-feat-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f5c248" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a9 9 0 0 1 9 9c0 3.6-2.1 6.8-5.3 8.3L12 22l-3.7-2.7A9.9 9.9 0 0 1 3 11a9 9 0 0 1 9-9z"/><path d="M12 6v6l3 3"/></svg>
+      </div>
+      <p class="hero-feat-title">Climate action</p>
+      <p class="hero-feat-desc">Faith-based approaches to environmental sustainability</p>
+    </div>
+    <div class="hero-feat">
+      <div class="hero-feat-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f5c248" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </div>
+      <p class="hero-feat-title">Intercultural dialogue</p>
+      <p class="hero-feat-desc">Bridging communities across 5 countries and faiths</p>
+    </div>
+    <div class="hero-feat">
+      <div class="hero-feat-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f5c248" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      </div>
+      <p class="hero-feat-title">SDG alignment</p>
+      <p class="hero-feat-desc">Grounded in 3 UN Sustainable Development Goals</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ OVERVIEW ══ -->
+<section class="overview" id="overview">
+  <div class="section-header reveal">
+    <span class="section-tag">About the Project</span>
+    <h2 class="section-title">Bridging Faith &amp; Climate Action</h2>
+    <p class="section-sub">A transformative 12-month initiative uniting young people from diverse faith traditions to lead real change across 5 countries.</p>
+  </div>
+  <div class="overview-figma">
+    <div class="ov-mission reveal">
+      <span class="ov-mission-tag">Our Mission</span>
+      <h3>Empowering Youth for Change</h3>
+      <p>To empower youth of faith aged 18–30 through training, mentoring, and resources that enable them to create impactful projects addressing climate change and promoting sustainability, while emphasizing the importance of interfaith dialogue and collaboration.</p>
+      <br/>
+      <p>We believe that young people, guided by the values of their faith, have the power to become the most effective agents of environmental stewardship in their communities.</p>
+    </div>
+    <div class="ov-vision reveal">
+      <h3>Our Vision</h3>
+      <p>To cultivate a generation of young leaders who champion climate action and sustainable development, fostering unity and respect among diverse faith communities, ultimately paving the way for a harmonious and resilient world.</p>
+    </div>
+    <div class="ov-overview reveal">
+      <h3>Project Overview</h3>
+      <p>Youth Are Green Faith Builders 2 empowers young individuals from diverse faith backgrounds to become proactive leaders in climate action. Through comprehensive training, mentoring, and funding, participants develop initiatives promoting intercultural dialogue and sustainable livelihoods — aligned with SDG 13, SDG 5, and SDG 9.</p>
+    </div>
+    <div class="ov-smart reveal">
+      <div class="ov-smart-label">Our Approach — S.M.A.R.T Objectives</div>
+      <div class="smart-grid">
+        <div class="smart-item"><div class="smart-letter">S</div><div class="smart-word">Specific</div></div>
+        <div class="smart-item"><div class="smart-letter">M</div><div class="smart-word">Measurable</div></div>
+        <div class="smart-item"><div class="smart-letter">A</div><div class="smart-word">Achievable</div></div>
+        <div class="smart-item"><div class="smart-letter">R</div><div class="smart-word">Relevant</div></div>
+        <div class="smart-item"><div class="smart-letter">T</div><div class="smart-word">Time-bound</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TIMELINE ══ -->
+<section class="timeline-section" id="timeline">
+  <div class="section-header reveal" style="text-align:center">
+    <span class="section-tag">Program Phases</span>
+    <h2 class="section-title">A Journey of Growth &amp; Impact</h2>
+    <p class="section-sub" style="margin:0 auto">Six phases from August 2024 to May 2025.</p>
+  </div>
+
+  <div class="tl-clean-wrapper">
+    <div class="tl-clean-item reveal">
+      <div class="tl-num">01</div>
+      <div class="tl-content">
+        <h3>Preparation &amp; Partnership Building</h3>
+        <span>Aug – Sep 2024</span>
+        <p>Building partnerships with faith organizations, NGOs, and stakeholders.</p>
+      </div>
+    </div>
+    <div class="tl-clean-item reveal">
+      <div class="tl-num">02</div>
+      <div class="tl-content">
+        <h3>Outreach &amp; Program Launch</h3>
+        <span>October 2024</span>
+        <p>Spreading awareness and inviting youth from five countries.</p>
+      </div>
+    </div>
+    <div class="tl-clean-item reveal">
+      <div class="tl-num">03</div>
+      <div class="tl-content">
+        <h3>Camp Phase</h3>
+        <span>November 2024</span>
+        <p>3-day intensive training on faith, climate, entrepreneurship, and peace.</p>
+      </div>
+    </div>
+    <div class="tl-clean-item reveal">
+      <div class="tl-num">04</div>
+      <div class="tl-content">
+        <h3>Mentoring Phase</h3>
+        <span>December 2024</span>
+        <p>Mentorship from experts across multiple countries.</p>
+      </div>
+    </div>
+    <div class="tl-clean-item reveal">
+      <div class="tl-num">05</div>
+      <div class="tl-content">
+        <h3>Implementation of Initiatives</h3>
+        <span>Jan – Apr 2025</span>
+        <p>Youth-led community projects creating real-world impact.</p>
+      </div>
+    </div>
+    <div class="tl-clean-item reveal">
+      <div class="tl-num">06</div>
+      <div class="tl-content">
+        <h3>Evaluation &amp; Impact</h3>
+        <span>May 2025</span>
+        <p>Measuring impact and showcasing achievements.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MAP ══ -->
+<section class="map-section" id="map">
+  <div class="section-header reveal">
+    <span class="section-tag">Locations</span>
+    <h2 class="section-title">5 Countries, 1 Mission</h2>
+    <p class="section-sub">The program takes place across five countries — each a unique context for faith-based climate action.</p>
+  </div>
+
+  <div class="map-wrapper reveal">
+    <div id="leaflet-map"></div>
+    <div class="map-legend">
+      <div class="map-legend-item" onclick="flyTo('Lebanon')">
+        <div class="map-legend-dot"></div>
+        <div><div class="map-legend-name">Lebanon</div><div class="map-legend-region">Middle East</div></div>
+      </div>
+      <div class="map-legend-item" onclick="flyTo('Jordan')">
+        <div class="map-legend-dot"></div>
+        <div><div class="map-legend-name">Jordan</div><div class="map-legend-region">Middle East</div></div>
+      </div>
+      <div class="map-legend-item" onclick="flyTo('Tunisia')">
+        <div class="map-legend-dot"></div>
+        <div><div class="map-legend-name">Tunisia</div><div class="map-legend-region">North Africa</div></div>
+      </div>
+      <div class="map-legend-item" onclick="flyTo('Albania')">
+        <div class="map-legend-dot"></div>
+        <div><div class="map-legend-name">Albania</div><div class="map-legend-region">Europe</div></div>
+      </div>
+      <div class="map-legend-item" onclick="flyTo('Indonesia')">
+        <div class="map-legend-dot"></div>
+        <div><div class="map-legend-name">Indonesia</div><div class="map-legend-region">Southeast Asia</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BENEFITS ══ -->
+<section class="benefits" id="benefits">
+  <div class="section-header">
+    <span class="section-tag">What You Gain</span>
+    <h2 class="section-title">Benefits for Participants</h2>
+    <p class="section-sub">Real resources, real mentors, and a real global network.</p>
+  </div>
+  <div class="benefits-grid">
+    <div class="ben-card reveal">
+      <div class="ben-icon"><i class="fa-solid fa-seedling"></i></div>
+      <h3>Project Funding</h3>
+      <p>Receive financial support to implement your community climate initiative, awarded after the camp based on your proposal.</p>
+    </div>
+    <div class="ben-card reveal">
+      <div class="ben-icon"><i class="fa-solid fa-compass"></i></div>
+      <h3>Expert Mentorship</h3>
+      <p>Paired with mentors from four countries for personalized guidance, regular check-ins, and hands-on workshops.</p>
+    </div>
+    <div class="ben-card reveal">
+      <div class="ben-icon"><i class="fa-solid fa-award"></i></div>
+      <h3>Certification</h3>
+      <p>Official certificate recognizing your training in climate action, peace leadership, and social entrepreneurship.</p>
+    </div>
+    <div class="ben-card reveal">
+      <div class="ben-icon"><i class="fa-solid fa-globe"></i></div>
+      <h3>Global Network</h3>
+      <p>Connect with 100+ youth leaders and international partners across Lebanon, Jordan, Tunisia, Albania, and Indonesia.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ELIGIBILITY ══ -->
+<section class="eligibility" id="eligibility">
+  <div class="section-header reveal">
+    <span class="section-tag">Who Can Apply</span>
+    <h2 class="section-title">Eligibility &amp; Expectations</h2>
+  </div>
+  <div class="eli-grid">
+    <div class="reveal">
+      <h3 style="font-family:'Lora',serif;color:var(--navy);font-size:1.05rem;margin-bottom:1rem;">You should be:</h3>
+      <ul class="eli-list">
+        <li>Between 18 and 30 years old (required)</li>
+        <li>Enrolled in or completed an undergraduate degree</li>
+        <li>Interested in faith, environment, or relevant fields</li>
+        <li>Have relevant work or volunteer experience</li>
+        <li>Have an established local network or willingness to build one</li>
+        <li>Fluent in English with good communication skills</li>
+        <li>Keen on the interplay of religious beliefs and environmental stewardship</li>
+      </ul>
+    </div>
+    <div class="eli-card reveal">
+      <h3>What we expect from you:</h3>
+      <ul class="eli-list">
+        <li>Run a workshop for at least 50 people in your community</li>
+        <li>Commit to a 3-month project focused on local or national impact</li>
+        <li>Participate for the full duration including pre and post sessions</li>
+        <li>Demonstrate eagerness to learn and expand your network</li>
+        <li>Show commitment to becoming a leader in your community</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══ APPLICATION FORM ══ -->
+<section class="apply-section" id="apply">
+  <div class="section-header reveal">
+    <span class="section-tag">Apply Now</span>
+    <h2 class="section-title">Join the Program</h2>
+    <p class="section-sub">Complete all three steps below. Fields marked * are required.</p>
+  </div>
+
+  {% if messages %}
+  <div class="django-messages">
+    {% for message in messages %}
+      <div class="msg {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="form-wrap reveal">
+    <div class="steps">
+      <div class="step-tab active" id="tab1" onclick="goTo(1)">1. Personal Info</div>
+      <div class="step-tab"        id="tab2" onclick="goTo(2)">2. Background</div>
+      <div class="step-tab"        id="tab3" onclick="goTo(3)">3. Essay &amp; CV</div>
+    </div>
+
+    <form method="POST" action="" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+
+      <!-- STEP 1 -->
+      <div class="form-page active" id="page1">
+        <div class="f-row">
+          <div class="f-group {% if form.full_name.errors %}has-error{% endif %}">
+            <label for="{{ form.full_name.id_for_label }}">Full Name *</label>
+            {{ form.full_name }}
+            {% if form.full_name.errors %}<ul class="field-errors">{% for e in form.full_name.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+          <div class="f-group {% if form.email.errors %}has-error{% endif %}">
+            <label for="{{ form.email.id_for_label }}">Email Address *</label>
+            {{ form.email }}
+            {% if form.email.errors %}<ul class="field-errors">{% for e in form.email.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-group {% if form.phone.errors %}has-error{% endif %}">
+            <label for="{{ form.phone.id_for_label }}">Phone Number *</label>
+            {{ form.phone }}
+            {% if form.phone.errors %}<ul class="field-errors">{% for e in form.phone.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+          <div class="f-group {% if form.age.errors %}has-error{% endif %}">
+            <label for="{{ form.age.id_for_label }}">Age * <span class="opt">(18–30 only)</span></label>
+            {{ form.age }}
+            {% if form.age.errors %}<ul class="field-errors">{% for e in form.age.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+        </div>
+        <div class="f-group {% if form.country.errors %}has-error{% endif %}">
+          <label for="{{ form.country.id_for_label }}">Country of Residence *</label>
+          {{ form.country }}
+          {% if form.country.errors %}<ul class="field-errors">{% for e in form.country.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="form-nav"><span></span><button type="button" class="btn-next" onclick="goTo(2)">Next →</button></div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="form-page" id="page2">
+        <div class="f-row">
+          <div class="f-group {% if form.faith_background.errors %}has-error{% endif %}">
+            <label for="{{ form.faith_background.id_for_label }}">Faith Background <span class="opt">(Optional)</span></label>
+            {{ form.faith_background }}
+            {% if form.faith_background.errors %}<ul class="field-errors">{% for e in form.faith_background.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+          <div class="f-group {% if form.education_level.errors %}has-error{% endif %}">
+            <label for="{{ form.education_level.id_for_label }}">Education Level *</label>
+            {{ form.education_level }}
+            {% if form.education_level.errors %}<ul class="field-errors">{% for e in form.education_level.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+        </div>
+        <div class="f-group {% if form.preferred_location.errors %}has-error{% endif %}">
+          <label for="{{ form.preferred_location.id_for_label }}">Preferred Camp Location <span class="opt">(Optional)</span></label>
+          {{ form.preferred_location }}
+        </div>
+        <div class="f-group {% if form.ngo_experience.errors %}has-error{% endif %}">
+          <label for="{{ form.ngo_experience.id_for_label }}">NGO / Volunteer Experience *</label>
+          {{ form.ngo_experience }}
+          {% if form.ngo_experience.errors %}<ul class="field-errors">{% for e in form.ngo_experience.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="form-nav">
+          <button type="button" class="btn-prev" onclick="goTo(1)">← Back</button>
+          <button type="button" class="btn-next" onclick="goTo(3)">Next →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="form-page" id="page3">
+        <div class="f-group {% if form.why_join_essay.errors %}has-error{% endif %}">
+          <label for="{{ form.why_join_essay.id_for_label }}">Why do you want to join? * <span class="opt">(~200 words)</span></label>
+          {{ form.why_join_essay }}
+          <div class="word-count" id="wc">0 words</div>
+          {% if form.why_join_essay.errors %}<ul class="field-errors">{% for e in form.why_join_essay.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="f-group {% if form.cv.errors %}has-error{% endif %}">
+          <label>Upload Your CV * <span class="opt">(PDF or Word, max 5 MB)</span></label>
+          <div class="upload-box" onclick="document.getElementById('{{ form.cv.id_for_label }}').click()">
+            <div class="upload-icon">📎</div>
+            <div class="upload-text">Click to browse or drag &amp; drop your CV here</div>
+            <div class="upload-name" id="cv-name">No file selected</div>
+            {{ form.cv }}
+          </div>
+          {% if form.cv.errors %}<ul class="field-errors">{% for e in form.cv.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="form-nav">
+          <button type="button" class="btn-prev" onclick="goTo(2)">← Back</button>
+          <button type="submit" class="btn-submit">Submit Application 🌱</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</section>
+
+<!-- ══ PARTNERS ══ -->
+<section class="partners" id="partners">
+  <div class="section-header reveal">
+    <span class="section-tag">Our Partners</span>
+    <h2 class="section-title">Organizations We Work With</h2>
+    <p class="section-sub" style="margin:0 auto">Collaborating with leading faith, environmental, and international organizations.</p>
+  </div>
+  <div class="partners-grid">
+    <div class="partner-card reveal">
+      <div class="partner-icon"><i class="fa-solid fa-church"></i></div>
+      <span>World Council of Churches</span>
+    </div>
+    <div class="partner-card reveal">
+      <div class="partner-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+      <span>LSE Centre</span>
+    </div>
+    <div class="partner-card reveal">
+      <div class="partner-icon"><i class="fa-solid fa-landmark"></i></div>
+      <span>Rose Castle Foundation</span>
+    </div>
+    <div class="partner-card reveal">
+      <div class="partner-icon"><i class="fa-solid fa-mosque"></i></div>
+      <span>Muslim Council of Elders</span>
+    </div>
+    <div class="partner-card reveal">
+      <div class="partner-icon"><i class="fa-solid fa-handshake"></i></div>
+      <span>Local NGO Partner</span>
+    </div>
+    <div class="partner-card reveal">
+      <div class="partner-icon"><i class="fa-solid fa-plus"></i></div>
+      <span>Coming Soon</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-logo">CP</div>
+  <p>© 2025 <a href="https://climaticpeace.org">Climatic Peace</a> · Youth Are Green Faith Builders 2</p>
+  <p style="margin-top:.4rem">Questions? <a href="mailto:info@climaticpeace.org">info@climaticpeace.org</a></p>
+  <p class="footer-tagline">Youth are the Green Faith Builders</p>
+</footer>
+
+<!-- ══ SCRIPTS ══ -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+/* ── Mobile nav ── */
+function toggleNav() { document.getElementById('mobileNav').classList.toggle('open'); }
+
+/* ── Scroll reveal ── */
+const ro = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      ro.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+/* ── MAP ── */
+const map = L.map('leaflet-map', {
+  zoomControl: true,
+  scrollWheelZoom: false,
+  doubleClickZoom: false,
+  zoomSnap: 0.25,
+}).setView([20, 0], 2); // 👈 ADD THIS
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© <a href="https://carto.com">CartoDB</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>',
+    subdomains: 'abcd',
+    maxZoom: 19,
+  }).addTo(map);
+
+  const locations = [
+    { name:'Lebanon',   region:'Middle East',    lat: 33.8547, lng:  35.8623, info:'Interfaith climate dialogue hub in the heart of the Middle East.' },
+    { name:'Jordan',    region:'Middle East',    lat: 30.5852, lng:  36.2384, info:'Bridging ancient faith traditions and modern sustainability.' },
+    { name:'Tunisia',   region:'North Africa',   lat: 33.8869, lng:   9.5375, info:'North Africa centre for green faith building.' },
+    { name:'Albania',   region:'Europe',         lat: 41.1533, lng:  20.1683, info:'European gateway for cross-cultural collaboration.' },
+    { name:'Indonesia', region:'Southeast Asia', lat: -2.5,    lng: 118.0,    info:'Southeast Asia hub for faith-based environmental action.' },
+  ];
+
+  const bounds = L.latLngBounds(locations.map(l => [l.lat, l.lng]));
+  const markerMap = {};
+  let activeMarker = null;
+
+  function resetView() {
+    map.flyToBounds(bounds, { paddingTopLeft:[60,60], paddingBottomRight:[60,60], duration:1 });
+  }
+
+  /* Animated pulse + dot marker */
+  function makeIcon() {
+    return L.divIcon({
+      html: `
+        <div style="position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+          <div style="position:absolute;width:36px;height:36px;background:rgba(233,165,32,0.22);border-radius:50%;animation:mpulse 2s ease-out infinite;"></div>
+          <div style="width:14px;height:14px;background:#0d2d45;border:3px solid #e9a520;border-radius:50%;position:relative;z-index:2;box-shadow:0 2px 8px rgba(13,45,69,.35);"></div>
+        </div>`,
+      className: '',
+      iconSize:   [36, 36],
+      iconAnchor: [18, 18],
+      popupAnchor:[0, -22],
+    });
+  }
+
+  /* Inject keyframe + tooltip reset */
+  const kf = document.createElement('style');
+  kf.textContent = `
+    @keyframes mpulse { 0%{transform:scale(.6);opacity:.8} 100%{transform:scale(2.2);opacity:0} }
+    .mp-tt { background:transparent!important; border:none!important; box-shadow:none!important; padding:0!important; }
+  `;
+  document.head.appendChild(kf);
+
+  locations.forEach(loc => {
+    const marker = L.marker([loc.lat, loc.lng], { icon: makeIcon() }).addTo(map);
+
+    /* Permanent country name label */
+    marker.bindTooltip(
+      `<span style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:#0d2d45;background:rgba(255,255,255,0.93);padding:3px 10px;border-radius:20px;border:1px solid rgba(13,45,69,.15);box-shadow:0 1px 6px rgba(0,0,0,.12);white-space:nowrap;letter-spacing:.02em;">${loc.name}</span>`,
+      { permanent:true, direction:'top', offset:[0,-22], className:'mp-tt' }
+    );
+
+    /* Click popup */
+    marker.bindPopup(`
+      <div style="font-family:'Montserrat',sans-serif;padding:14px 16px;min-width:190px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">
+          <div style="width:10px;height:10px;border-radius:50%;background:#0d2d45;border:2px solid #e9a520;flex-shrink:0;"></div>
+          <strong style="font-size:13px;color:#0d2d45;">${loc.name}</strong>
+        </div>
+        <div style="font-size:10px;font-weight:700;color:#e9a520;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;">${loc.region}</div>
+        <div style="font-size:12px;color:#3a5568;line-height:1.6;">${loc.info}</div>
+      </div>
+    `, { closeButton:false, maxWidth:220 });
+
+    marker.on('click', () => {
+      if (activeMarker === marker) {
+        activeMarker = null;
+        resetView();
+        marker.closePopup();
+      } else {
+        activeMarker = marker;
+        map.flyTo([loc.lat, loc.lng], 6, { duration:1 });
+        marker.openPopup();
+      }
+    });
+
+    markerMap[loc.name] = { marker, loc };
+  });
+
+  /* Global flyTo — called by legend items */
+  window.flyTo = function(name) {
+    const entry = markerMap[name];
+    if (!entry) return;
+    activeMarker = entry.marker;
+    map.flyTo([entry.loc.lat, entry.loc.lng], 6, { duration:1 });
+    entry.marker.openPopup();
+  };
+
+  /* Click map background → reset */
+  map.on('click', e => {
+    if (!e.originalEvent.target.closest('.leaflet-marker-icon')) {
+      activeMarker = null;
+      resetView();
+    }
+  });
+
+  
+
+
+/* ── Countdown ── */
+function updateCountdown() {
+  const diff = new Date('2026-05-21T23:59:59') - new Date();
+  if (diff <= 0) {
+    ['cd-d','cd-h','cd-m'].forEach(id => document.getElementById(id).textContent = '00');
+    return;
+  }
+  document.getElementById('cd-d').textContent = String(Math.floor(diff / 86400000)).padStart(2,'0');
+  document.getElementById('cd-h').textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2,'0');
+  document.getElementById('cd-m').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
+}
+updateCountdown();
+setInterval(updateCountdown, 30000);
+
+/* ── Multi-step form ── */
+let current = 1;
+function goTo(step) {
+  document.getElementById('page' + current).classList.remove('active');
+  document.getElementById('tab'  + current).classList.remove('active');
+  if (step > current) document.getElementById('tab' + current).classList.add('done');
+  else                document.getElementById('tab' + current).classList.remove('done');
+  current = step;
+  document.getElementById('page' + current).classList.add('active');
+  document.getElementById('tab'  + current).classList.add('active');
+  document.getElementById('tab'  + current).classList.remove('done');
+  document.getElementById('apply').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+/* Auto-jump to form step with errors */
+(function autoJumpToError() {
+  const step2Fields = ['id_faith_background','id_education_level','id_preferred_location','id_ngo_experience'];
+  const step3Fields = ['id_why_join_essay','id_cv'];
+  const hasError = id => { const el = document.getElementById(id); return el && el.closest('.has-error'); };
+  if (step3Fields.some(hasError)) { goTo(3); return; }
+  if (step2Fields.some(hasError)) { goTo(2); return; }
+})();
+
+/* ── Word counter ── */
+const essay = document.getElementById('id_why_join_essay');
+const wc    = document.getElementById('wc');
+if (essay && wc) {
+  function updateWC() {
+    const words = essay.value.trim() === '' ? 0 : essay.value.trim().split(/\s+/).length;
+    wc.textContent = words + ' words';
+    wc.className   = 'word-count' + (words >= 150 && words <= 250 ? ' good' : '');
+  }
+  essay.addEventListener('input', updateWC);
+  updateWC();
+}
+
+/* ── CV upload label ── */
+const cvInput = document.getElementById('id_cv');
+if (cvInput) {
+  cvInput.style.display = 'none';
+  cvInput.addEventListener('change', () => {
+    document.getElementById('cv-name').textContent = cvInput.files[0]?.name || 'No file selected';
+  });
+}
+</script>
+</body>
+</html>
