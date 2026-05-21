@@ -81,7 +81,6 @@
 
     html {
       scroll-behavior: smooth;
-      /* FIX: prevent horizontal scroll that can happen on some mobile browsers */
       overflow-x: hidden;
     }
 
@@ -90,7 +89,6 @@
       background: var(--cream);
       color: var(--text-dark);
       line-height: 1.7;
-      /* FIX: overflow-x on body alone is not enough; set on html too */
       overflow-x: hidden;
     }
 
@@ -98,19 +96,17 @@
 
     img {
       max-width: 100%;
-      height: auto; /* FIX: was missing — prevents tall images breaking layout */
+      height: auto; 
       display: block;
     }
 
     h1, h2, h3 { font-family: 'Lora', serif; }
 
-    /* FIX: Focus-visible ring for keyboard navigation — WCAG 2.4.7 */
     :focus-visible {
       outline: 3px solid var(--gold);
       outline-offset: 3px;
     }
 
-    /* FIX: Reduced-motion support — WCAG 2.3.3 */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -255,8 +251,7 @@
       background: none;
       border: none;
       cursor: pointer;
-      padding: .5rem; /* FIX: enlarged tap target */
-      /* FIX: min 44×44 tap target — WCAG 2.5.5 */
+      padding: .5rem; 
       min-width: 44px;
       min-height: 44px;
       align-items: center;
@@ -274,9 +269,7 @@
     }
 
     /* Mobile Nav */
-    /* FIX: was display:none then display:flex — causes layout flash.
-       Use visibility + opacity for smooth transition instead. */
-    .mobile-nav {
+        .mobile-nav {
       display: flex;
       position: fixed;
       inset: 0;
@@ -301,7 +294,6 @@
       color: var(--white);
       font-size: 1.2rem;
       font-weight: 600;
-      /* FIX: adequate tap targets on mobile */
       padding: .5rem 2rem;
       border-radius: 8px;
       transition: background .2s;
@@ -321,7 +313,6 @@
       color: var(--white);
       font-size: 2rem;
       cursor: pointer;
-      /* FIX: min 44×44 tap target */
       min-width: 44px;
       min-height: 44px;
       display: flex;
@@ -352,7 +343,7 @@
       width: 42px;
       height: 42px;
       color: rgba(255,255,255,.7);
-      font-size: 1rem; /* FIX: was 1.1rem with text chars, now sized for FA icons */
+      font-size: 1rem; 
       transition: background .2s;
       border-bottom: 1px solid rgba(255,255,255,.1);
     }
@@ -372,7 +363,6 @@
     .hero-grid {
       display: grid;
       grid-template-columns: 55% 45%;
-      /* FIX: min-height via grid row instead of child — avoids collapse */
       min-height: 480px;
     }
 
@@ -406,7 +396,6 @@
       background: var(--teal);
       border-radius: 50%;
       animation: blink 1.5s infinite;
-      /* FIX: will-change for GPU-composited animation */
       will-change: opacity;
     }
 
@@ -1022,11 +1011,9 @@
       box-shadow: var(--shadow-md);
     }
 
-    /* FIX: map height with clamp so it's usable on mobile without being massive on desktop */
     #leaflet-map {
       height: clamp(280px, 45vw, 460px);
       width: 100%;
-      /* FIX: explicit z-index so map tiles never bleed over sticky nav */
       z-index: 1;
     }
 
@@ -1066,7 +1053,6 @@
       color: var(--text-light);
     }
 
-    /* FIX: map legend collapses gracefully on small screens */
     @media (max-width: 600px) {
       .map-legend {
         grid-template-columns: repeat(3, 1fr);
@@ -1076,7 +1062,6 @@
         border-bottom: 1px solid var(--border);
       }
 
-      /* remove right border when it's the last in a row */
       .map-legend-item:nth-child(3n) {
         border-right: none;
       }
@@ -1200,7 +1185,7 @@
       font-size: 1.05rem;
     }
 
-    .eli-card .eli-list li { color: rgba(255,255,255,.8); } /* FIX: was .72 */
+    .eli-card .eli-list li { color: rgba(255,255,255,.8); } 
     .eli-card .eli-list li::before { color: var(--gold-light); }
 
     /* ═══════════════════════════════════
@@ -1314,7 +1299,6 @@
       appearance: none;
     }
 
-    /* FIX: restore select chevron since we removed native appearance */
     .f-group select {
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%237a94a8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
@@ -1334,7 +1318,6 @@
       min-height: 120px;
     }
 
-    /* FIX: hide the native file input button text but keep visible for upload box */
     #id_cv { display: none; }
 
     .field-errors { margin-top: .35rem; }
@@ -1368,8 +1351,8 @@
       cursor: pointer;
       transition: border-color .2s, background .2s;
       background: var(--white);
-      /* FIX: keyboard accessible */
-      tabindex: 0;
+      
+      
     }
 
     .upload-box:hover,
@@ -1611,10 +1594,10 @@
 
     <ul class="nav-links" role="list">
       <li><a href="https://climaticpeace.org">Home</a></li>
-      <li><a href="https://climaticpeace.org/#about">About Us</a></li>
+      <li><a href="https://climaticpeace.org/aboutus/">About Us</a></li>
       <li><a href="#overview">Our Work</a></li>
       <li><a href="#map">Locations</a></li>
-      <li><a href="https://climaticpeace.org/#contact">Contact</a></li>
+      <li><a href="https://climaticpeace.org/contact-us/">Contact</a></li>
       <li><a href="#apply" class="nav-join">Join Us</a></li>
     </ul>
 
@@ -1920,43 +1903,41 @@
 
       <div class="map-legend" aria-label="Map legend" role="list">
         <div class="map-legend-item" role="listitem">
-          <div class="map-legend-dot" aria-hidden="true"></div>
+          <div class="map-legend-dot" style="background:#e63946;border-color:#e63946"></div>
           <div>
             <div class="map-legend-name">Lebanon</div>
             <div class="map-legend-region">Middle East</div>
           </div>
         </div>
         <div class="map-legend-item" role="listitem">
-          <div class="map-legend-dot" aria-hidden="true"></div>
+          <div class="map-legend-dot" style="background:#f4a261;border-color:#f4a261"></div>
           <div>
             <div class="map-legend-name">Jordan</div>
             <div class="map-legend-region">Middle East</div>
           </div>
         </div>
         <div class="map-legend-item" role="listitem">
-          <div class="map-legend-dot" aria-hidden="true"></div>
+          <div class="map-legend-dot" style="background:#2a9d8f;border-color:#2a9d8f"></div>
           <div>
             <div class="map-legend-name">Tunisia</div>
             <div class="map-legend-region">North Africa</div>
           </div>
         </div>
         <div class="map-legend-item" role="listitem">
-          <div class="map-legend-dot" aria-hidden="true"></div>
+          <div class="map-legend-dot" style="background:#6a4c93;border-color:#6a4c93"></div>
           <div>
             <div class="map-legend-name">Albania</div>
             <div class="map-legend-region">Europe</div>
           </div>
         </div>
         <div class="map-legend-item" role="listitem">
-          <div class="map-legend-dot" aria-hidden="true"></div>
+          <div class="map-legend-dot" style="background:#e9a520;border-color:#e9a520"></div>
           <div>
             <div class="map-legend-name">Indonesia</div>
             <div class="map-legend-region">Southeast Asia</div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
 
   <!-- ══════════════════════════════════════
        BENEFITS
@@ -2326,129 +2307,66 @@
       revealObserver.observe(el);
     });
 
-    /* ═══════════════════════════════════
-       LEAFLET MAP
-       FIX 1: `activeMarker` was never declared — ReferenceError crashed entire map
-       FIX 2: hover fly-to on mobile causes accidental zooms — disable on touch devices
-       FIX 3: scrollWheelZoom disabled by default (blocks page scroll); re-enable on click
-       FIX 4: map.invalidateSize() needed after reveal/resize
+   /* ═══════════════════════════════════
+       MAP 
     ═══════════════════════════════════ */
     var mapEl = document.getElementById('leaflet-map');
 
     if (mapEl) {
-      var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-
       var map = L.map('leaflet-map', {
-        zoomSnap: 0.5,
-        scrollWheelZoom: false, /* FIX: off by default — prevents scroll hijacking */
-        tap: false              /* FIX: Leaflet tap conflicts with click events on iOS */
+        scrollWheelZoom: true,
+        zoomControl: true,
+        dragging: true,
+        tap: false
       });
-
-      /* FIX: Re-enable scroll zoom when map is focused/clicked */
-      map.on('focus click', function() { map.scrollWheelZoom.enable(); });
-      map.on('blur', function() { map.scrollWheelZoom.disable(); });
 
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://carto.com/">CartoDB</a> &copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19
       }).addTo(map);
 
-      var markerIcon = L.divIcon({
-        html: '<div style="width:14px;height:14px;background:#0d2d45;border:3px solid #e9a520;border-radius:50%;box-shadow:0 0 0 5px rgba(13,45,69,.2)"></div>',
-        className: '',
-        iconSize: [14, 14],
-        iconAnchor: [7, 7],
-        popupAnchor: [0, -10]
-      });
-
       var locations = [
-        { name: 'Lebanon',   lat:  33.8547, lng:  35.8623, info: 'Middle East hub for interfaith climate dialogue.' },
-        { name: 'Jordan',    lat:  30.5852, lng:  36.2384, info: 'Bridging ancient faith traditions and modern sustainability.' },
-        { name: 'Tunisia',   lat:  33.8869, lng:   9.5375, info: 'North Africa center for green faith building.' },
-        { name: 'Albania',   lat:  41.1533, lng:  20.1683, info: 'European gateway for cross-cultural collaboration.' },
-        { name: 'Indonesia', lat:  -0.7893, lng: 113.9213, info: 'Southeast Asia hub for faith-based environmental action.' }
+        { name: 'Lebanon',   lat: 33.8547, lng:  35.8623, color: '#e63946', info: 'Middle East hub for interfaith climate dialogue.' },
+        { name: 'Jordan',    lat: 30.5852, lng:  36.2384, color: '#f4a261', info: 'Bridging ancient faith traditions and modern sustainability.' },
+        { name: 'Tunisia',   lat: 33.8869, lng:   9.5375, color: '#2a9d8f', info: 'North Africa center for green faith building.' },
+        { name: 'Albania',   lat: 41.1533, lng:  20.1683, color: '#6a4c93', info: 'European gateway for cross-cultural collaboration.' },
+        { name: 'Indonesia', lat: -0.7893, lng: 113.9213, color: '#e9a520', info: 'Southeast Asia hub for faith-based environmental action.' }
       ];
 
       var bounds = L.latLngBounds(locations.map(function(l) { return [l.lat, l.lng]; }));
 
-      /* FIX: declared at correct scope — was missing, causing ReferenceError */
-      var activeMarker = null;
-      var isZoomed = false;
-
-      function resetView() {
-        isZoomed = false;
-        activeMarker = null;
-        map.flyTo(
-          bounds.getCenter(),
-          map.getBoundsZoom(bounds, false, [60, 60]),
-          { duration: 0.8, easeLinearity: 0.5 }
-        );
-      }
-
       locations.forEach(function(loc) {
-        var marker = L.marker([loc.lat, loc.lng], { icon: markerIcon }).addTo(map);
+        var icon = L.divIcon({
+          html: '<div style="width:16px;height:16px;background:' + loc.color + ';border:3px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,.35)"></div>',
+          className: '',
+          iconSize: [16, 16],
+          iconAnchor: [8, 8],
+          popupAnchor: [0, -12]
+        });
+
+        var marker = L.marker([loc.lat, loc.lng], { icon: icon }).addTo(map);
 
         marker.bindPopup(
-          '<div style="font-family:\'Montserrat\',sans-serif;padding:4px 2px;min-width:160px">' +
-            '<strong style="color:#0d2d45;font-size:.88rem;display:block;margin-bottom:3px">' + loc.name + '</strong>' +
+          '<div style="font-family:\'Montserrat\',sans-serif;padding:6px 4px;min-width:170px">' +
+            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">' +
+              '<span style="width:10px;height:10px;border-radius:50%;background:' + loc.color + ';display:inline-block;flex-shrink:0"></span>' +
+              '<strong style="color:#0d2d45;font-size:.88rem">' + loc.name + '</strong>' +
+            '</div>' +
             '<span style="font-size:.76rem;color:#3a5568;line-height:1.5">' + loc.info + '</span>' +
           '</div>',
           { closeButton: false, maxWidth: 220 }
         );
 
-        /* FIX: hover only on non-touch devices to prevent accidental zoom on mobile */
-        if (!isTouchDevice) {
-          marker.on('mouseover', function() {
-            if (!isZoomed) {
-              map.flyTo([loc.lat, loc.lng], 5, { duration: 0.8, easeLinearity: 0.5 });
-            }
-            this.openPopup();
-          });
-
-          marker.on('mouseout', function() {
-            if (!isZoomed) {
-              resetView();
-              this.closePopup();
-            }
-          });
-        }
-
-        marker.on('click', function() {
-          if (activeMarker === marker && isZoomed) {
-            /* Clicking same marker again — reset */
-            resetView();
-            marker.closePopup();
-          } else {
-            isZoomed = true;
-            activeMarker = marker;
-            map.flyTo([loc.lat, loc.lng], 6, { duration: 0.8, easeLinearity: 0.5 });
-            marker.openPopup();
-          }
-        });
+        marker.on('click', function() { this.openPopup(); });
       });
 
-      /* FIX: click on map canvas (not marker) resets zoom */
-      map.on('click', function(e) {
-        /* Only reset if clicked on tile layer, not a marker */
-        if (e.originalEvent && e.originalEvent.target) {
-          var t = e.originalEvent.target;
-          if (!t.closest || !t.closest('.leaflet-marker-icon')) {
-            resetView();
-          }
-        }
-      });
-
-      /* FIX: fit bounds on initial load */
       map.fitBounds(bounds, { padding: [60, 60] });
+      map.setView([20,55],2.5);
 
-      /* FIX: invalidate size after reveal animation completes */
-      setTimeout(function() { map.invalidateSize(); }, 700);
+      setTimeout(function() { map.invalidateSize(); }, 400);
 
-      /* FIX: invalidate on window resize (handles orientation change) */
-      var resizeTimer;
       window.addEventListener('resize', function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() { map.invalidateSize(); }, 200);
+        map.invalidateSize();
       });
     }
 

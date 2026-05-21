@@ -5,264 +5,353 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Application Received — Climatic Peace</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Lora:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
 
 <style>
-
-:root{
-  --navy:#0d3d52;
-  --teal:#1f7a8c;
-  --gold:#f0b429;
-  --text:#4a6272;
-  --white:#ffffff;
+:root {
+  --navy:      #0d2d45;
+  --navy-mid:  #164060;
+  --teal:      #1a6b7c;
+  --gold:      #e9a520;
+  --gold-light:#f5c248;
+  --gold-pale: #faedc0;
+  --cream:     #f6f4ef;
+  --border:    #cdd8e0;
+  --text-mid:  #3a5568;
+  --white:     #ffffff;
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  min-height: 100vh;
+  background: var(--navy);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
 }
 
-body{
-  font-family:'Poppins',sans-serif;
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:2rem;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at top left, rgba(240,180,41,.15), transparent 35%),
-    radial-gradient(circle at bottom right, rgba(31,122,140,.18), transparent 35%),
-    linear-gradient(135deg,#0d3d52 0%, #0a2d3d 100%);
+/* decorative background shapes */
+.bg-shape {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.bg-shape-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(233,165,32,.08), transparent 70%);
+  top: -150px; right: -150px;
+}
+.bg-shape-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(26,107,124,.12), transparent 70%);
+  bottom: -120px; left: -120px;
 }
 
-/* background glow */
-.bg-circle{
-  position:absolute;
-  border-radius:50%;
-  filter:blur(20px);
-  opacity:.15;
-  z-index:0;
+/* topbar strip */
+.topbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--teal), var(--gold), var(--teal));
 }
 
-.bg1{
-  width:260px;
-  height:260px;
-  background:var(--gold);
-  top:-80px;
-  left:-80px;
+/* logo */
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: 2.5rem;
 }
 
-.bg2{
-  width:300px;
-  height:300px;
-  background:var(--teal);
-  bottom:-100px;
-  right:-80px;
+.logo-emblem {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.08);
+  border: 1.5px solid rgba(255,255,255,.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Lora', serif;
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--gold-light);
 }
 
-.card{
-  position:relative;
-  z-index:2;
-  width:100%;
-  max-width:540px;
-  background:rgba(255,255,255,.96);
-  backdrop-filter:blur(12px);
-  border-radius:28px;
-  padding:3.5rem 3rem;
-  text-align:center;
-  box-shadow:
-    0 20px 60px rgba(0,0,0,.18),
-    0 0 0 1px rgba(255,255,255,.08);
-  animation:pop .7s cubic-bezier(.34,1.56,.64,1);
+.logo-text {
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: rgba(255,255,255,.85);
+  line-height: 1.2;
 }
 
-@keyframes pop{
-  from{
-    opacity:0;
-    transform:translateY(30px) scale(.9);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0) scale(1);
-  }
+.logo-text span {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .65rem;
+  font-weight: 500;
+  color: rgba(255,255,255,.45);
+  letter-spacing: .04em;
 }
 
-/* success icon */
-.success-wrap{
-  display:flex;
-  justify-content:center;
-  margin-bottom:1.4rem;
+/* main card */
+.card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 520px;
+  background: var(--cream);
+  border-radius: 20px;
+  border-top: 5px solid var(--gold);
+  padding: 3rem 2.5rem 2.5rem;
+  text-align: center;
+  box-shadow: 0 24px 64px rgba(0,0,0,.3);
 }
 
-.success-icon{
-  width:95px;
-  height:95px;
-  border-radius:50%;
-  background:rgba(31,122,140,.12);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  position:relative;
-  animation:pulse 2s infinite;
+/* check icon */
+.check-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.8rem;
 }
 
-.success-icon::before{
-  content:"";
-  width:62px;
-  height:62px;
-  border-radius:50%;
-  background:var(--teal);
-  position:absolute;
+.check-outer {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: rgba(26,107,124,.1);
+  border: 2px solid rgba(26,107,124,.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.success-icon svg{
-  position:relative;
-  z-index:2;
-  width:34px;
-  height:34px;
-  stroke:white;
-  stroke-width:3;
-  fill:none;
-  stroke-linecap:round;
-  stroke-linejoin:round;
+.check-inner {
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  background: var(--teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-size: 1.4rem;
+  animation: pop-in .5s cubic-bezier(.34,1.56,.64,1) both;
 }
 
-@keyframes pulse{
-  0%{ box-shadow:0 0 0 0 rgba(31,122,140,.35); }
-  70%{ box-shadow:0 0 0 18px rgba(31,122,140,0); }
-  100%{ box-shadow:0 0 0 0 rgba(31,122,140,0); }
+@keyframes pop-in {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
 }
 
-.badge{
-  display:inline-block;
-  background:rgba(240,180,41,.14);
-  color:#9c6b00;
-  font-size:.72rem;
-  font-weight:700;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  padding:.55rem .95rem;
-  border-radius:999px;
-  margin-bottom:1.2rem;
+/* badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--gold-pale);
+  color: #8a5e00;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: .35rem 1rem;
+  border-radius: 50px;
+  margin-bottom: 1.2rem;
 }
 
-h1{
-  color:var(--navy);
-  font-size:2rem;
-  font-weight:800;
-  margin-bottom:.9rem;
-  line-height:1.2;
+h1 {
+  font-family: 'Lora', serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.2;
+  margin-bottom: .9rem;
 }
 
-p{
-  color:var(--text);
-  font-size:.96rem;
-  line-height:1.75;
+.program-name {
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--teal);
+  margin-bottom: 1rem;
+  display: block;
 }
 
-p + p{
-  margin-top:.45rem;
+p {
+  font-size: .86rem;
+  color: var(--text-mid);
+  line-height: 1.75;
 }
 
-.highlight{
-  color:var(--navy);
-  font-weight:700;
+/* info strip */
+.info-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 1.8rem 0;
 }
 
-.back{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:.5rem;
-  margin-top:2rem;
-  background:var(--gold);
-  color:var(--navy);
-  padding:.9rem 2rem;
-  border-radius:999px;
-  font-weight:700;
-  font-size:.92rem;
-  text-decoration:none;
-  transition:.28s ease;
-  box-shadow:0 10px 25px rgba(240,180,41,.25);
+.info-item {
+  background: var(--white);
+  padding: .9rem .5rem;
+  text-align: center;
 }
 
-.back:hover{
-  transform:translateY(-3px);
-  box-shadow:0 14px 30px rgba(240,180,41,.35);
+.info-icon {
+  font-size: 1rem;
+  color: var(--teal);
+  margin-bottom: .35rem;
 }
 
-.note{
-  margin-top:1.6rem;
-  font-size:.8rem;
-  color:#7b8d98;
+.info-label {
+  font-size: .62rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  display: block;
+  margin-bottom: .2rem;
 }
 
-@media(max-width:600px){
-
-  body{
-    padding:1.2rem;
-  }
-
-  .card{
-    padding:2.8rem 1.7rem;
-    border-radius:24px;
-  }
-
-  h1{
-    font-size:1.65rem;
-  }
-
-  p{
-    font-size:.92rem;
-  }
-
-  .back{
-    width:100%;
-  }
+.info-value {
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--navy);
 }
 
+/* note */
+.note {
+  font-size: .78rem;
+  color: #7a94a8;
+  margin-top: .5rem;
+  padding: .8rem 1rem;
+  background: rgba(26,107,124,.06);
+  border-radius: 8px;
+  border-left: 3px solid var(--teal);
+  text-align: left;
+  line-height: 1.6;
+}
+
+/* back button */
+.back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  margin-top: 1.8rem;
+  background: var(--navy);
+  color: var(--white);
+  padding: .8rem 2rem;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: .84rem;
+  text-decoration: none;
+  transition: background .2s, transform .2s;
+  min-height: 44px;
+  width: 100%;
+}
+
+.back:hover {
+  background: var(--teal);
+  transform: translateY(-2px);
+}
+
+/* footer text */
+.footer-note {
+  margin-top: 2rem;
+  font-size: .7rem;
+  color: rgba(255,255,255,.3);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 540px) {
+  .card { padding: 2rem 1.4rem; }
+  h1 { font-size: 1.45rem; }
+  .info-strip { grid-template-columns: 1fr; }
+  .info-item { border-bottom: 1px solid var(--border); }
+  .info-item:last-child { border-bottom: none; }
+}
 </style>
 </head>
-
 <body>
 
-<div class="bg-circle bg1"></div>
-<div class="bg-circle bg2"></div>
+<div class="topbar"></div>
+<div class="bg-shape bg-shape-1"></div>
+<div class="bg-shape bg-shape-2"></div>
+
+<div class="logo-wrap">
+  <div class="logo-emblem">CP</div>
+  <div class="logo-text">
+    Climatic Peace
+    <span>Youth-led Foundation</span>
+  </div>
+</div>
 
 <div class="card">
 
-  <div class="success-wrap">
-    <div class="success-icon">
-      <svg viewBox="0 0 24 24">
-        <path d="M5 13l4 4L19 7"></path>
-      </svg>
+  <div class="check-wrap">
+    <div class="check-outer">
+      <div class="check-inner">
+        <i class="fa-solid fa-check" aria-hidden="true"></i>
+      </div>
     </div>
   </div>
 
-  <div class="badge">Application Submitted</div>
+  <div class="badge">
+    <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+    Application Submitted
+  </div>
 
-  <h1>Application Received!</h1>
+  <h1>You're in the pipeline!</h1>
 
-  <p>
-    Thank you for applying to
-    <span class="highlight">Youth Are Green Faith Builders 2</span>.
-  </p>
+  <span class="program-name">Youth Are Green Faith Builders 2</span>
 
-  <p>
-    Your application has been successfully submitted and is now under review by our team.
-  </p>
+  <p>Your application has been received and is now under review by our team. We'll be in touch soon.</p>
+
+  <div class="info-strip" aria-label="Next steps">
+    <div class="info-item">
+      <div class="info-icon"><i class="fa-solid fa-envelope" aria-hidden="true"></i></div>
+      <span class="info-label">Step 1</span>
+      <span class="info-value">Check email</span>
+    </div>
+    <div class="info-item">
+      <div class="info-icon"><i class="fa-solid fa-user-check" aria-hidden="true"></i></div>
+      <span class="info-label">Step 2</span>
+      <span class="info-value">Review process</span>
+    </div>
+    <div class="info-item">
+      <div class="info-icon"><i class="fa-solid fa-earth-africa" aria-hidden="true"></i></div>
+      <span class="info-label">Step 3</span>
+      <span class="info-value">Join the program</span>
+    </div>
+  </div>
 
   <p class="note">
-    Selected participants will be contacted through email after the review process.
+    <i class="fa-solid fa-circle-info" style="color:var(--teal);margin-right:6px" aria-hidden="true"></i>
+    Selected participants will be contacted by email. Please check your inbox and spam folder regularly.
   </p>
 
   <a href="{% url 'index' %}" class="back">
-    ← Back to Program Page
+    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+    Back to Program Page
   </a>
 
 </div>
+
+<p class="footer-note">© 2025 Climatic Peace · Youth are the Green Faith Builders</p>
 
 </body>
 </html>
