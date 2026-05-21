@@ -2,6 +2,57 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import ApplicationForm
 from .models import Application
+import requests
+import logging
+import os
+
+logger = logging.getLogger(__name__)
+
+def sync_to_sheetdb(application):
+    """
+    Sends one row to Google Sheets via SheetDB API.
+    If anything goes wrong we log the error but do NOT
+    crash the user's form submission.
+    """
+    try:
+        api_url = os.environ.get('SHEETDB_API_URL')
+ 
+        if not api_url:
+            logger.warning("SHEETDB_API_URL not set — skipping sync.")
+            return False
+ 
+        row = {
+            "Full Name":           application.full_name,
+            "Email":               application.email,
+            "Phone":               application.phone,
+            "Age":                 application.age,
+            "Country":             application.country,
+            "Faith Background":    application.get_faith_background_display() or "Prefer not to say",
+            "Education":           application.get_education_level_display(),
+            "Preferred Location":  application.get_preferred_location_display() or "Not specified",
+            "NGO Experience":      application.ngo_experience,
+            "Why Join Essay":      application.why_join_essay,
+            "CV Filename":         application.cv.name if application.cv else "",
+            "Submitted At":        application.submitted_at.strftime("%Y-%m-%d %H:%M:%S UTC"),
+        }
+ 
+        response = requests.post(
+            api_url,
+            json={"data": row},
+            timeout=10
+        )
+ 
+        if response.status_code == 201:
+            Application.objects.filter(pk=application.pk).update(synced_to_sheets=True)
+            logger.info(f"Synced {application.email} to SheetDB.")
+            return True
+        else:
+            logger.error(f"SheetDB returned {response.status_code}: {response.text}")
+            return False
+ 
+    except Exception as e:
+        logger.error(f"SheetDB sync failed for {application.email}: {e}")
+        return False
 
 def index(request):
 
